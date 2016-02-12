@@ -4,6 +4,7 @@ COMMANDS = [
   'branch'
   'checkout'
   'commit'
+  'diff'
   'init'
   'log'
 ]
