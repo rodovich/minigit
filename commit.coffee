@@ -1,7 +1,9 @@
 fs = require('fs')
 crypto = require('crypto')
 
-OBJECTS_DIR = '.minigit/objects'
+MINIGIT_DIR = '.minigit'
+REFS_DIR = "#{MINIGIT_DIR}/refs"
+OBJECTS_DIR = "#{MINIGIT_DIR}/objects"
 
 writeObject = (data) ->
   hash = crypto.createHash('sha1').update(data).digest('hex')
@@ -26,4 +28,7 @@ module.exports = (message) ->
     commitData = JSON.stringify(commit)
     commitHash = writeObject(commitData)
 
-    console.log "#{commitHash}: #{message}"
+    head = fs.readFileSync("#{MINIGIT_DIR}/HEAD").toString().trim()
+    fs.writeFileSync "#{REFS_DIR}/#{head}", commitHash
+
+    console.log "[#{head} #{commitHash}] #{message}"
