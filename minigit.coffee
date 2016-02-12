@@ -1,6 +1,7 @@
 [command, args...] = process.argv[2..]
 
 COMMANDS = [
+  'branch'
   'commit'
   'init'
 ]
