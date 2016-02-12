@@ -5,6 +5,7 @@ COMMANDS = [
   'checkout'
   'commit'
   'init'
+  'log'
 ]
 
 if command in COMMANDS
