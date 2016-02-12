@@ -50,7 +50,8 @@ module.exports = (branch) ->
       files[file].merging = hash
 
     resolutions = {}
-    conflicts = []
+    conflicts = {}
+    hasConflicts = false
     for file, { ancestor, local, merging } of files
       if local? or merging?
         if local is merging
@@ -60,13 +61,16 @@ module.exports = (branch) ->
         else if local is ancestor
           resolutions[file] = merging if merging?
         else
-          conflicts.push file
-
-    if conflicts.length > 0
-      console.log 'Conflicts:'
-      for conflict in conflicts
-        console.log "  #{conflict}"
-      return
+          hasConflicts = true
+          data1 = if local? then fs.readFileSync("#{OBJECTS_DIR}/#{local}").toString() else ''
+          data2 = if merging? then fs.readFileSync("#{OBJECTS_DIR}/#{merging}").toString() else ''
+          conflicts[file] = """
+          <<<<<<< #{head}
+          #{data1}
+          =======
+          #{data2}
+          >>>>>>> #{branch}
+          """
 
     fs.readdir '.', (err, files) ->
       return if err?
@@ -77,5 +81,11 @@ module.exports = (branch) ->
       for file, hash of resolutions
         data = fs.readFileSync("#{OBJECTS_DIR}/#{hash}")
         fs.writeFileSync file, data
+
+      if hasConflicts
+        console.log 'Conflicts:'
+        for file, resolution of conflicts
+          console.log "  #{file}"
+          fs.writeFileSync file, resolution
 
       console.log "Merged #{branch} into #{head}"
