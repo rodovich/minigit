@@ -12,6 +12,8 @@ writeObject = (data) ->
 
 module.exports = (message) ->
   date = new Date()
+  head = fs.readFileSync("#{MINIGIT_DIR}/HEAD").toString().trim()
+  parent = fs.readFileSync("#{REFS_DIR}/#{head}").toString().trim()
 
   fs.readdir '.', (err, files) ->
     return if err?
@@ -19,7 +21,7 @@ module.exports = (message) ->
     commitFiles = (file for file in files when not fs.statSync(file).isDirectory())
     commitFiles.sort()
 
-    commit = { date, message }
+    commit = { date, message, parent }
     commit.files = for file in commitFiles
       data = fs.readFileSync(file)
       hash = writeObject(data)
@@ -28,7 +30,6 @@ module.exports = (message) ->
     commitData = JSON.stringify(commit)
     commitHash = writeObject(commitData)
 
-    head = fs.readFileSync("#{MINIGIT_DIR}/HEAD").toString().trim()
     fs.writeFileSync "#{REFS_DIR}/#{head}", commitHash
 
     console.log "[#{head} #{commitHash}] #{message}"
