@@ -2,6 +2,7 @@
 
 COMMANDS = [
   'branch'
+  'checkout'
   'commit'
   'init'
 ]
