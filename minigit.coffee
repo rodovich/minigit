@@ -1,6 +1,10 @@
 [command, args...] = process.argv[2..]
 
-COMMANDS = ['init']
+COMMANDS = [
+  'commit'
+  'init'
+]
+
 if command in COMMANDS
   require("./#{command}")(args...)
 else
