@@ -7,6 +7,7 @@ COMMANDS = [
   'diff'
   'init'
   'log'
+  'merge-base'
 ]
 
 if command in COMMANDS
