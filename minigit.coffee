@@ -7,6 +7,7 @@ COMMANDS = [
   'diff'
   'init'
   'log'
+  'merge'
   'merge-base'
 ]
 
